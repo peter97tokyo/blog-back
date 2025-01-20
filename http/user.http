@@ -1,0 +1,11 @@
+
+
+POST http:localhost:8080/api/users 
+Content-Type: application/json;
+
+{
+    "username" : "gldj98",
+    "password" : "gldj0811@",
+    "email" : "gldj98@naver.com",
+    "role" : "admin"
+}
