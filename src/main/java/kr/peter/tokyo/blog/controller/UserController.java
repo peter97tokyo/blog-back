@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody User user) {
+    public ResponseEntity<?> save(@RequestBody User user) {
 
         String username = user.getUsername();
         String password = ShaUtil.encrypt(user.getPassword());
