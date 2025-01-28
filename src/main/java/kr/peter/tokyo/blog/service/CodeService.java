@@ -1,7 +1,6 @@
 package kr.peter.tokyo.blog.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +25,17 @@ public class CodeService {
         return codeRepository.findAll();
     }
 
-    // Read by ID
-    public Optional<Code> getCodeById(Long id) {
-        return codeRepository.findById(id);
+    public List<Code> getChildCodes(Code parent, String groupYn) {
+        return codeRepository.findByParentAndGroupYn(parent, groupYn);
+    }
+
+    public List<Code> getParentCodes(String groupYn) {
+        return codeRepository.findByParentIsNullAndGroupYn(groupYn);
+    }
+
+    public Code getCodeById(Long id) {
+        return codeRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Invalid id: " + id));
     }
 
     // Delete
