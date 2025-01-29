@@ -13,7 +13,7 @@ import javax.crypto.SecretKey;
 public class JwtUtil {
 
     private final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256); // 비밀키 (반드시 안전하게 보관)
-    private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1시간
+    private final long EXPIRATION_TIME = 500 * 60 * 60; // 1시간
 
     // 1. 토큰 생성
     public String generateToken(String username, String role) {

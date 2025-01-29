@@ -84,13 +84,10 @@ public class UserController {
 
     @GetMapping("/dashboard")
     public ResponseEntity<?> adminDashboard(@RequestHeader("Authorization") String token) {
-        // "Bearer " 제거
         token = token.substring(7);
 
-        // 토큰에서 클레임 추출
         Claims claims = jwtUtil.extractClaims(token);
 
-        // 역할(Role) 검증
         if ("admin".equals(claims.get("role"))) {
             return ResponseEntity.ok().body("jwt.admin");
         }

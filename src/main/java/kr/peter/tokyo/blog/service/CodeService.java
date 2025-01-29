@@ -15,12 +15,10 @@ public class CodeService {
     @Autowired
     private CodeRepository codeRepository;
 
-    // Create or Update
     public Code saveCode(Code code) {
         return codeRepository.save(code);
     }
 
-    // Read All
     public List<Code> getAllCodes() {
         return codeRepository.findAll();
     }
@@ -38,7 +36,6 @@ public class CodeService {
         .orElseThrow(() -> new IllegalArgumentException("Invalid id: " + id));
     }
 
-    // Delete
     public void deleteCode(Long id) {
         codeRepository.deleteById(id);
     }
