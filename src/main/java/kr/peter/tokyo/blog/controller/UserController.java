@@ -14,44 +14,31 @@ import kr.peter.tokyo.blog.util.ShaUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private JwtUtil jwtUtil;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody User user) {
-
+    public ResponseEntity<User> save(@RequestBody User user) {
         String username = user.getUsername();
         String password = ShaUtil.encrypt(user.getPassword());
-
         if(password == null){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("user.fail");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // 400 
         }
         user.setPassword(password);
-        
-        Optional<User> checkedUser = userService.findByUsername(username);
-        if (!checkedUser.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("user.already");
+        User checkedUser = userService.findByUsername(username);
+        if (checkedUser != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null); // 409
         }
         User savedUser = null;
         savedUser = userService.saveUser(user);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("username", savedUser.getUsername());
-        response.put("role", savedUser.getRole());
-        response.put("status", "user.created");
-
         return ResponseEntity.ok(savedUser);
     }
     
@@ -61,40 +48,35 @@ public class UserController {
         String username = user.getUsername();
         String password = ShaUtil.encrypt(user.getPassword());
         if (password == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("user.fail");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // 400
         }
-        Optional<User> checkedUser = userService.findByUsername(username);
-        if (checkedUser.isEmpty()) {
-            return ResponseEntity.ok().body("user.empty");
+        User checkedUser = userService.findByUsername(username);
+        if (checkedUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 404
         }
-
-        User foundUser = checkedUser.get(); 
-        if (!foundUser.getPassword().equals(password)) {
-            return ResponseEntity.ok().body("user.badPassword");
+        if (!checkedUser.getPassword().equals(password)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 401
         }
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("username", foundUser.getUsername());
-        response.put("role", foundUser.getRole());
-        response.put("status", "user.login");
-        String token = jwtUtil.generateToken(foundUser.getUsername(), "admin");
+        if(!checkedUser.getRole().equals("admin")){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null); // 403
+        }
+        Map<Object, Object> response = new HashMap<>();
+        String token = jwtUtil.generateToken(checkedUser.getUsername(), "admin");
         response.put("token", token);
-        return ResponseEntity.ok(response); 
-    }
+        return ResponseEntity.ok().body(response);
+    }   
 
     @GetMapping("/dashboard")
-    public ResponseEntity<?> adminDashboard(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<User> dashboard(@RequestHeader("Authorization") String token) {
         token = token.substring(7);
-
         Claims claims = jwtUtil.extractClaims(token);
-
         if ("admin".equals(claims.get("role"))) {
-            return ResponseEntity.ok().body("jwt.admin");
+            return ResponseEntity.ok().body(null);
         }
         if ("user".equals(claims.get("role"))) {
-            return ResponseEntity.ok().body("jwt.user");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null); // 403
         }
-        return ResponseEntity.ok().body("jwt.nothing");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 404
     }
 
 }

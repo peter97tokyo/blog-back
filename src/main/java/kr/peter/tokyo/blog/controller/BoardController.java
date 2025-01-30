@@ -24,23 +24,23 @@ public class BoardController {
     private BoardConfigService boardConfigService;
 
     @PostMapping
-    public ResponseEntity<BoardConfig> saveBoardConfig(@RequestBody BoardConfig boardConfig) {
+    public ResponseEntity<BoardConfig> save(@RequestBody BoardConfig boardConfig) {
         BoardConfig saved = boardConfigService.saveBoardConfig(boardConfig);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BoardConfig> getBoardConfig(@PathVariable Long id) {
+    public ResponseEntity<BoardConfig> detail(@PathVariable Long id) {
         return ResponseEntity.ok(boardConfigService.getBoardConfigById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<BoardConfig>> getAllBoardConfigs() {
+    public ResponseEntity<List<BoardConfig>> list() {
         return ResponseEntity.ok(boardConfigService.getAllBoardConfigs());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBoardConfig(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         boardConfigService.deleteBoardConfig(id);
         return ResponseEntity.noContent().build();
     }
