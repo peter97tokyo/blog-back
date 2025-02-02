@@ -3,6 +3,8 @@ package kr.peter.tokyo.blog.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import kr.peter.tokyo.blog.entity.BoardConfig;
@@ -30,5 +32,9 @@ public class BoardConfigService {
 
     public void deleteBoardConfig(Long id) {
         boardConfigRepository.deleteById(id);
+    }
+
+    public Page<BoardConfig> getBoardConfigs(int page, int size) {
+        return boardConfigRepository.findAll(PageRequest.of(page, size));
     }
 }
