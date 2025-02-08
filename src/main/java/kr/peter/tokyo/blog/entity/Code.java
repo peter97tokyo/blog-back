@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "code")
@@ -43,8 +44,7 @@ public class Code {
      * 부모 코드는 하나일 수 있음
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id") // 부모 코드의 ID를 참조
-    @JsonIgnore // 순환 참조 방지
+    @JoinColumn(name = "parent_id")
     private Code parent;
 
     /**
@@ -79,5 +79,15 @@ public class Code {
     public void removeChild(Code child) {
         children.remove(child);
         child.setParent(null);
+    }
+
+    @JsonIgnore  // 직렬화 시에는 무시
+    public Code getParent() {
+        return parent;
+    }
+
+    @JsonProperty  // 역직렬화 시에 JSON 값을 바인딩
+    public void setParent(Code parent) {
+        this.parent = parent;
     }
 }

@@ -19,7 +19,7 @@ import kr.peter.tokyo.blog.service.BoardConfigService;
 
 @RestController
 @RequestMapping("/api/boardConfigs")
-public class BoardController {
+public class BoardConfigController {
 
     @Autowired
     private BoardConfigService boardConfigService;

@@ -40,7 +40,7 @@ public class BoardConfig {
     @Column(nullable = false)
     private String boardType;
 
-    @Column
+    @Column(nullable = false)
     private String boardCategory;  
 
 }

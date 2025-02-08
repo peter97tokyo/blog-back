@@ -21,11 +21,22 @@ public class CodeController {
     private CodeService codeService;
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestParam(required = false) Long parent, @RequestBody Code code) {
-        if (parent != null && parent != 0) {
-            Code parentCode = codeService.getCodeById(parent);
-            code.setParent(parentCode); 
+    public ResponseEntity<?> save(@RequestBody Code code) {
+        System.out.println("wonjun");
+        System.out.println(code);
+        Code parentCode = null;
+        if (code.getParent() != null && code.getParent().getId() != null && code.getParent().getId() != 0) {
+            try {
+                Long parentId = code.getParent().getId();
+                parentCode = codeService.getCodeById(parentId);
+            } catch (Exception e) {
+                // ID에 해당하는 Code 객체를 찾을 수 없는 경우 처리
+                // 예: 로그 출력, 예외 던지기, parentCode를 null로 유지
+                
+            }
         }
+        code.setParent(parentCode);
+
         Code savedCode = codeService.saveCode(code);
         if(savedCode == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // 400
