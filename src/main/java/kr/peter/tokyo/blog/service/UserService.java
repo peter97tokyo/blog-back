@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import kr.peter.tokyo.blog.entity.User;
 import kr.peter.tokyo.blog.repository.UserRepository;
 
-import java.util.Optional;
 
 @Service
 public class UserService {
