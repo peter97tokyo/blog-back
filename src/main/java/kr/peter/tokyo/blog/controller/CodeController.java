@@ -22,26 +22,24 @@ public class CodeController {
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody Code code) {
-        System.out.println("wonjun");
-        System.out.println(code);
         Code parentCode = null;
+        if (code.getParent() != null && code.getParent().getId() != null && code.getId() == code.getParent().getId()) {
+            code.setParent(null);
+        }    
         if (code.getParent() != null && code.getParent().getId() != null && code.getParent().getId() != 0) {
             try {
                 Long parentId = code.getParent().getId();
-                parentCode = codeService.getCodeById(parentId);
+                parentCode = codeService.codeById(parentId);
             } catch (Exception e) {
-                // ID에 해당하는 Code 객체를 찾을 수 없는 경우 처리
-                // 예: 로그 출력, 예외 던지기, parentCode를 null로 유지
-                
             }
         }
         code.setParent(parentCode);
 
-        Code savedCode = codeService.saveCode(code);
+        Code savedCode = codeService.save(code);
         if(savedCode == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // 400
         }
-            return ResponseEntity.ok().body(null); // 200
+        return ResponseEntity.ok().body(null); // 200
     }
 
     @GetMapping
@@ -50,23 +48,31 @@ public class CodeController {
         @RequestParam String groupYn) {
         List<Code> codes;
         if (parent == null) {
-            codes = codeService.getParentCodes(groupYn);
+            codes = codeService.parents(groupYn);
         } else {
-            Code parentCode = codeService.getCodeById(parent);
-            codes = codeService.getChildCodes(parentCode, groupYn);
+            Code parentCode = codeService.codeById(parent);
+            codes = codeService.childrenByParentAndGroupYn(parentCode, groupYn);
         }
         return ResponseEntity.ok(codes);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Code> detail(@PathVariable Long id) {
-        Code code = codeService.getCodeById(id);
+        Code code = codeService.codeById(id);
         return ResponseEntity.ok(code);
+    }
+
+    @GetMapping("/children/{codeKey}")
+    public ResponseEntity<List<Code>> childByCodeKey(@PathVariable String codeKey) {
+        List<Code> codes;
+        Code parent = codeService.codeByCodeKey(codeKey);
+        codes = codeService.childrenByParent(parent);
+        return ResponseEntity.ok(codes);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        codeService.deleteCode(id);
+        codeService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -11,4 +11,8 @@ public interface CodeRepository extends JpaRepository<Code, Long>{
     List<Code> findByParentAndGroupYn(Code parent, String groupYn);
 
     List<Code> findByParentIsNullAndGroupYn(String groupYn);
+
+    Code findByCodeKey(String codeKey);
+
+    List<Code> findByParent(Code parent);
 }

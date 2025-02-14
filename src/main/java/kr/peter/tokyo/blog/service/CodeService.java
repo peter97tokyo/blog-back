@@ -15,28 +15,36 @@ public class CodeService {
     @Autowired
     private CodeRepository codeRepository;
 
-    public Code saveCode(Code code) {
+    public Code save(Code code) {
         return codeRepository.save(code);
     }
 
-    public List<Code> getAllCodes() {
+    public List<Code> listAll() {
         return codeRepository.findAll();
     }
 
-    public List<Code> getChildCodes(Code parent, String groupYn) {
+    public List<Code> childrenByParentAndGroupYn(Code parent, String groupYn) {
         return codeRepository.findByParentAndGroupYn(parent, groupYn);
     }
 
-    public List<Code> getParentCodes(String groupYn) {
+    public List<Code> parents(String groupYn) {
         return codeRepository.findByParentIsNullAndGroupYn(groupYn);
     }
 
-    public Code getCodeById(Long id) {
+    public Code codeById(Long id) {
         return codeRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Invalid id: " + id));
     }
 
-    public void deleteCode(Long id) {
+    public void delete(Long id) {
         codeRepository.deleteById(id);
+    }
+
+    public List<Code> childrenByParent(Code parent) {
+        return codeRepository.findByParent(parent);
+    }
+
+    public Code codeByCodeKey(String codeKey) {
+        return codeRepository.findByCodeKey(codeKey);
     }
 }
