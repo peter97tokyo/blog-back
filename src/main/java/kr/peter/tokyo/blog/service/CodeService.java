@@ -19,7 +19,7 @@ public class CodeService {
         return codeRepository.save(code);
     }
 
-    public List<Code> listAll() {
+    public List<Code> list() {
         return codeRepository.findAll();
     }
 

@@ -17,24 +17,28 @@ public class BoardConfigService {
     @Autowired
     private BoardConfigRepository boardConfigRepository;
 
-    public BoardConfig saveBoardConfig(BoardConfig code) {
+    public BoardConfig save(BoardConfig code) {
         return boardConfigRepository.save(code);
     }
 
-    public List<BoardConfig> getAllBoardConfigs() {
+    public List<BoardConfig> list() {
         return boardConfigRepository.findAll();
     }
 
-    public BoardConfig getBoardConfigById(Long id) {
+    public BoardConfig boardConfigById(Long id) {
         return boardConfigRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Invalid id: " + id));
     }
 
-    public void deleteBoardConfig(Long id) {
+    public void delete(Long id) {
         boardConfigRepository.deleteById(id);
     }
 
-    public Page<BoardConfig> getBoardConfigs(int page, int size) {
+    public Page<BoardConfig> page(int page, int size) {
         return boardConfigRepository.findAll(PageRequest.of(page, size));
+    }
+
+    public List<BoardConfig> listByActive(boolean isActive) {
+        return boardConfigRepository.findByIsActive(isActive);
     }
 }

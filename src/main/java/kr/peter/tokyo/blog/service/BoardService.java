@@ -17,24 +17,24 @@ public class BoardService {
     @Autowired
     private BoardRepository boardRepository;
 
-    public Board saveBoard(Board code) {
+    public Board save(Board code) {
         return boardRepository.save(code);
     }
 
-    public List<Board> getAllBoard() {
+    public List<Board> list() {
         return boardRepository.findAll();
     }
 
-    public Board getBoardById(Long id) {
+    public Board boardById(Long id) {
         return boardRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Invalid id: " + id));
     }
 
-    public void deleteBoard(Long id) {
+    public void delete(Long id) {
         boardRepository.deleteById(id);
     }
 
-    public Page<Board> getBoard(int page, int size) {
+    public Page<Board> page(int page, int size) {
         return boardRepository.findAll(PageRequest.of(page, size));
     }
 }

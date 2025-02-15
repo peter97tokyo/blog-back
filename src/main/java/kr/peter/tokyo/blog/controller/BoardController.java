@@ -26,13 +26,13 @@ public class BoardController {
 
     @PostMapping
     public ResponseEntity<Board> save(@RequestBody Board boardConfig) {
-        Board saved = boardService.saveBoard(boardConfig);
+        Board saved = boardService.save(boardConfig);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Board> detail(@PathVariable Long id) {
-        return ResponseEntity.ok(boardService.getBoardById(id));
+        return ResponseEntity.ok(boardService.boardById(id));
     }
 
     @GetMapping
@@ -40,12 +40,12 @@ public class BoardController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(boardService.getBoard(page, size));
+        return ResponseEntity.ok(boardService.page(page, size));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        boardService.deleteBoard(id);
+        boardService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

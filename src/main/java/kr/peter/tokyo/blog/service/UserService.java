@@ -15,15 +15,15 @@ public class UserService {
     private UserRepository userRepository;
 
 
-    public User saveUser(User user) {
+    public User save(User user) {
         return userRepository.save(user);
     }
 
-    public User findByUsername(String username) {
+    public User userByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    public User findByEmail(String email) {
+    public User userByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 }

@@ -33,12 +33,12 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // 400 
         }
         user.setPassword(password);
-        User checkedUser = userService.findByUsername(username);
+        User checkedUser = userService.userByUsername(username);
         if (checkedUser != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null); // 409
         }
         User savedUser = null;
-        savedUser = userService.saveUser(user);
+        savedUser = userService.save(user);
         return ResponseEntity.ok(savedUser);
     }
     
@@ -50,7 +50,7 @@ public class UserController {
         if (password == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // 400
         }
-        User checkedUser = userService.findByUsername(username);
+        User checkedUser = userService.userByUsername(username);
         if (checkedUser == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 404
         }
